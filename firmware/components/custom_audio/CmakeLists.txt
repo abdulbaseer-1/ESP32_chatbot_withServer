@@ -1,0 +1,5 @@
+idf_component_register(
+    SRCS "mic_i2s.c" "speaker_i2s.c" "wakeword.c"
+    INCLUDE_DIRS "."
+    REQUIRES driver esp-sr esp_netif custom_utils
+)

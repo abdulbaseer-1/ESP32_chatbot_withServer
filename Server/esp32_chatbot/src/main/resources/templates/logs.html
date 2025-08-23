@@ -1,0 +1,445 @@
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"> 
+<head> 
+    <meta charset="UTF-8">
+    <title>ESP32 Voice Assistant Logs</title> 
+     
+    <style> 
+        header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 70%, var(--accent-color) 100%);
+        color: var(--text-light);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-medium);
+        position: relative;
+        overflow: hidden;
+        min-height: 70px;
+    }
+
+    /* Subtle animated background pattern */
+    header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        opacity: 0.6;
+        animation: backgroundFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes backgroundFloat {
+        0%, 100% { transform: translateX(0) translateY(0); }
+        25% { transform: translateX(-10px) translateY(-5px); }
+        50% { transform: translateX(5px) translateY(-10px); }
+        75% { transform: translateX(-5px) translateY(5px); }
+    }
+
+    /* Logo section */
+    .logo {
+        position: relative;
+        z-index: 2;
+        flex-shrink: 0;
+    }
+
+    .logo h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: var(--transition-smooth);
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+    }
+
+    .logo h2:hover {
+        transform: translateY(-1px);
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Navigation container */
+    nav {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        flex-wrap: wrap;
+    }
+
+    /* Navigation links */
+    nav a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        transition: var(--transition-smooth);
+        position: relative;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    /* Hover and focus states */
+    nav a:hover,
+    nav a:focus {
+        transform: translateY(-1px);
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Active state */
+    nav a.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Focus styles for accessibility */
+    nav a:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 2px;
+    }
+
+    /* Mobile hamburger menu */
+    .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: var(--transition-smooth);
+        position: relative;
+        z-index: 3;
+    }
+
+    .mobile-menu-toggle:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        header {
+            padding: 1rem 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo h2 {
+            font-size: 1.3rem;
+        }
+
+        nav {
+            order: 3;
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav a {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .mobile-menu-toggle {
+            display: block;
+            order: 2;
+        }
+    }
+
+    @media (max-width: 640px) {
+        header {
+            padding: 0.75rem 1rem;
+        }
+
+        .logo h2 {
+            font-size: 1.2rem;
+        }
+
+        nav {
+            gap: 0.25rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+        }
+
+        nav a {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        header {
+            background: var(--primary-dark);
+        }
+        
+        nav a:hover,
+        nav a:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+        
+        header::before {
+            animation: none;
+        }
+        
+        nav a:hover {
+            transform: none;
+        }         
+    } 
+     
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    /* Header styling */
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+        font-weight: 300;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Container for responsive table */
+    .table-container {
+        overflow-x: auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+
+    /* Table styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    /* Header styling */
+    thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    th {
+        padding: 18px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: white;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+    }
+
+    /* Body styling */
+    tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #e8ecf0;
+    }
+
+    tbody tr:hover {
+        background-color: #f8f9ff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    td {
+        padding: 15px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        border: none;
+    }
+
+    /* Column-specific styling */
+    td:nth-child(1) { /* ID column */
+        font-weight: 600;
+        color: #667eea;
+        text-align: center;
+        min-width: 60px;
+    }
+
+    td:nth-child(2) { /* Timestamp column */
+        color: #7f8c8d;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        min-width: 180px;
+    }
+
+    td:nth-child(3) { /* Device ID column */
+        font-weight: 500;
+        color: #2c3e50;
+        min-width: 120px;
+    }
+
+    td:nth-child(4) { /* Transcript column */
+        color: #34495e;
+        font-style: italic;
+        max-width: 400px;
+        word-wrap: break-word;
+        line-height: 1.6;
+    }
+
+    /* Responsive design */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 8px;
+            font-size: 0.85rem;
+        }
+        
+        td:nth-child(2) {
+            font-size: 0.75rem;
+        }
+        
+        /* Stack table on very small screens */
+        @media screen and (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            tr {
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                padding: 15px;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            
+            td {
+                border: none;
+                position: relative;
+                padding: 8px 8px 8px 35%;
+                text-align: left;
+            }
+            
+            td:before {
+                content: attr(data-label) ": ";
+                position: absolute;
+                left: 8px;
+                top: 8px;
+                font-weight: bold;
+                color: #667eea;
+                width: 30%;
+            }
+        }
+    }
+
+    /* Loading animation for dynamic content */
+    .loading {
+        animation: pulse 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+        from {
+            opacity: 0.6;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Status indicators (optional - if you want to add status) */
+    .status-active {
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .status-inactive {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    /* Empty state styling */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+        font-style: italic;
+    }
+
+    .empty-state::before {
+        content: "📊";
+        display: block;
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+    </style>
+</head> 
+<body> 
+    <!-- Header Fragment Integration -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+  
+    <div class="table-container"> 
+        <h1>ESP32 Voice Assistant Logs</h1>
+        <table >
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Device ID</th>
+                    <th>Transcript</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="log : ${logs}">
+                    <td th:text="${log.id}" data-label="ID"></td>
+                    <td th:text="${log.timestamp}" data-label="Timestamp"></td>
+                    <td th:text="${log.deviceId}" data-label="Device ID"></td>
+                    <td th:text="${log.transcript}" data-label="Transcript"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div> 
+     
+    <!-- Footer Fragment Integration -->
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body> 
+</html>

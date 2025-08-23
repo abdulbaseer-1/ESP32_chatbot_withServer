@@ -1,0 +1,10 @@
+      [Voice]
+        ↓
+     +--------+      Wi-Fi       +------------+     API     +------------------+
+     | ESP32  | ───────────────▶ |  Node.js   | ────────▶  |   AI Assistant   |
+     | +Mic   |                  |   Server   |           | (OpenAI, etc.)    |
+     | +WakeWD| ◀─────────────── | (API + Cfg)| ◀───────  |   TTS, Whisper    |
+     +--------+    Response      +------------+   Text    +------------------+
+ 
+Wakeword system : ESP-SR
+Server : Spring Boot

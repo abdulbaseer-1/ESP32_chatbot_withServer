@@ -1,0 +1,8 @@
+dependencies:
+  idf:
+    version: ">=5.5"
+
+  espressif/esp-dsp: "^1.7.0" 
+   
+  espressif/esp-adf: "^2.7"
+  #espressif/esp-sr: "^2.1.4" #dosent seem to load as a component automatically

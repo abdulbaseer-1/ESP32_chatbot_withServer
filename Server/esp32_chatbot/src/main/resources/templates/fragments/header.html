@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${pageTitle}">ESP32 Voice Assistant</title>
+    <style>
+        /* CSS Custom Properties for consistent theming */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+            --text-light: #f8fafc;
+            --text-muted: #e2e8f0;
+            --shadow-light: 0 4px 12px rgba(79, 70, 229, 0.15);
+            --shadow-medium: 0 8px 25px rgba(79, 70, 229, 0.25);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-brand: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Reset and base styles for consistent rendering */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-brand);
+        }
+
+        /* Main header container with modern styling */
+        header {
+            /* Create a sophisticated gradient background that transitions from our primary color to secondary */
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 70%, var(--accent-color) 100%);
+            color: var(--text-light);
+            padding: 1.25rem 2rem;
+            
+            /* Use flexbox for perfect alignment and responsive behavior */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            /* Enhanced shadow for depth and modern appearance */
+            box-shadow: 
+                var(--shadow-medium),
+                0 1px 0 rgba(255, 255, 255, 0.1) inset;
+            
+            /* Relative positioning allows for pseudo-element overlays */
+            position: relative;
+            
+            /* Prevent content overflow during animations */
+            overflow: hidden;
+        }
+
+        /* Subtle animated background pattern for visual interest */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* SVG pattern creates a subtle dotted texture */
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.6;
+            /* Animation creates gentle movement in the background */
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+
+        /* Keyframe animation for the background pattern */
+        @keyframes backgroundFloat {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-10px) translateY(-5px); }
+            50% { transform: translateX(5px) translateY(-10px); }
+            75% { transform: translateX(-5px) translateY(5px); }
+        }
+
+        /* Logo section styling with enhanced typography */
+        .logo {
+            /* Ensure logo stays above the animated background */
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            /* Text shadow adds depth and improves readability on gradient backgrounds */
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            
+            /* Smooth transition for any future hover effects */
+            transition: var(--transition-smooth);
+            
+            /* Subtle letter spacing improves readability for brand names */
+            letter-spacing: -0.025em;
+        }
+
+        /* Optional hover effect for the logo */
+        .logo h2:hover {
+            transform: translateY(-1px);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Navigation container with improved spacing and alignment */
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            /* Ensure navigation stays above background elements */
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Individual navigation link styling */
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            
+            /* Enhanced padding creates better click targets for accessibility */
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            
+            /* Smooth transitions make interactions feel polished */
+            transition: var(--transition-smooth);
+            
+            /* Relative positioning allows for pseudo-element effects */
+            position: relative;
+            
+            /* Subtle text shadow improves readability */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hover and focus states for better user feedback */
+        nav a:hover,
+        nav a:focus {
+            /* Transform creates subtle lift effect */
+            transform: translateY(-2px);
+            
+            /* Background color with transparency for glass-like effect */
+            background-color: rgba(255, 255, 255, 0.15);
+            
+            /* Enhanced shadow for depth */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            
+            /* Remove default underline in favor of our custom styling */
+            text-decoration: none;
+            
+            /* Improved text shadow for hover state */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Active state for the current page indicator */
+        nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Focus styles for keyboard navigation accessibility */
+        nav a:focus {
+            outline: 2px solid var(--text-light);
+            outline-offset: 2px;
+        }
+
+        /* Responsive design for mobile devices */
+        @media (max-width: 768px) {
+            header {
+                /* Reduce padding on smaller screens */
+                padding: 1rem 1.5rem;
+                /* Stack elements vertically on mobile if needed */
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .logo h2 {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                /* Reduce gap between navigation items on mobile */
+                gap: 1rem;
+                /* Allow wrapping if navigation items are too wide */
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav a {
+                /* Smaller padding for mobile touch targets */
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Even smaller screens (phones in portrait) */
+        @media (max-width: 480px) {
+            nav {
+                gap: 0.5rem;
+            }
+
+            nav a {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* High contrast mode support for accessibility */
+        @media (prefers-contrast: high) {
+            header {
+                background: var(--primary-dark);
+            }
+            
+            nav a:hover,
+            nav a:focus {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        /* Reduced motion support for users who prefer less animation */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            header::before {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header th:fragment="header">
+        <div class="logo">
+            <h2>ESP32 Voice Assistant</h2>
+        </div>
+        <nav>
+            <a href="/" th:href="@{/}">Home</a>
+            <a href="/dashboard" th:href="@{/dashboard}">Dashboard</a>
+            <a href="/logs" th:href="@{/logs}">Logs</a>
+            <a href="/about" th:href="@{/about}">About</a>
+        </nav>
+    </header>
+</body>
+</html>

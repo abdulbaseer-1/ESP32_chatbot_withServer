@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+<section th:fragment="project-description">
+<head>
+    <meta charset="UTF-8">
+    <title>ESP ChatBot - Project Description</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2d3748;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-section h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-section .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+
+        h2 {
+            color: #4f46e5;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 2px;
+        }
+
+        h3 {
+            color: #6366f1;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            color: #4a5568;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-list li {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #bae6fd;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-list li::before {
+            content: "✅";
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .feature-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+            border-color: #60a5fa;
+        }
+
+        pre {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 16px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+            border: 1px solid #4a5568;
+            position: left;
+        }
+
+        pre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+            border-radius: 16px 16px 0 0;
+        }
+
+        code {
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+            background: #edf2f7;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #4a5568;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        th {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s ease;
+        }
+
+        tr:hover td {
+            background-color: #f7fafc;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px dashed #60a5fa;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-family: monospace;
+            color: #1e40af;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-diagram::before {
+            content: '🔄';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .author-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid #cbd5e0;
+        }
+
+        .author-section h2 {
+            margin-top: 0;
+        }
+
+        .security-notes {
+            background: linear-gradient(135deg, #fef5e7 0%, #fed7aa 20%);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .security-notes h2 {
+            color: #d97706;
+            margin-top: 0;
+        }
+
+        .performance-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 20%);
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .performance-section h2 {
+            color: #16a34a;
+            margin-top: 0;
+        }
+
+        .future-section {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 20%);
+            border: 1px solid #a855f7;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .future-section h2 {
+            color: #9333ea;
+            margin-top: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                border-radius: 16px;
+            }
+
+            .header-section {
+                padding: 2rem 1rem;
+            }
+
+            .header-section h1 {
+                font-size: 2.25rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+
+            pre {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #3730a3, #6b21a8);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>🧠 ESP ChatBot</h1>
+            <div class="subtitle">
+                A lightweight, offline-first voice interface framework for ESP32 using Espressif's ESP-SR v2.0.5. 
+                Detects custom wake words, captures audio from I2S microphones, and publishes via MQTT or HTTP 
+                to backends for AI processing.
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🚀 Features</h2>
+            <ul class="feature-list">
+                <li>Wake Word Detection with WakeNet9 ("hijason")</li>
+                <li>I2S microphone audio capture</li>
+                <li>MQTT / HTTP audio publishing</li>
+                <li>Modular components architecture</li>
+                <li>Built on ESP-SR v2.0.5 & ESP-IDF v5.x</li>
+                <li>Extensible for AI/NLP pipelines</li>
+            </ul>
+
+            <h2>🏗️ Project Structure</h2>
+            <pre><code>esp_chatbot/
+├── main/                        # Main entry point
+│   ├── main.c                  # App logic
+│   └── CMakeLists.txt
+├── components/
+│   ├── custom_audio/           # I2S mic interface, audio capture
+│   ├── custom_network/         # HTTP/MQTT handling
+│   ├── custom_system/          # WakeNet integration, task control
+│   └── ...                     # ESP-IDF + ESP-SR components
+├── .devcontainer/              # Dev container config
+├── .vscode/                    # VS Code settings
+├── sdkconfig                   # IDF menuconfig output
+├── partitions.csv              # Flash partition layout
+├── CMakeLists.txt
+└── README.md                   # This file</code></pre>
+
+            <h2>🧠 Wake Word Detection</h2>
+            <p>The system uses WakeNet9 for wake word detection, with the model embedded as a C array for efficient memory usage and fast access times.</p>
+            <pre><code>xxd -i hijason.bin > hijason.h
+
+wn_iface = &ESP_WN9_MODEL;
+wn_model = (model_t *)&hijason;</code></pre>
+
+            <h2>🎙️ Audio Pipeline</h2>
+            <p>The audio pipeline captures high-quality PCM audio upon wake word detection. The system records 5-second audio clips in 16-bit mono format at 16kHz sampling rate, which provides an optimal balance between audio quality and data size for voice processing applications.</p>
+
+            <h2>⚙️ Configuration via menuconfig</h2>
+            <p>The system configuration is managed through ESP-IDF's menuconfig system, allowing you to customize various aspects of the application without modifying source code directly.</p>
+            <pre><code>idf.py menuconfig</code></pre>
+            <p>Key configuration areas include ESP Speech Recognition settings with WakeNet9 custom models, I2S microphone parameters, and Wi-Fi network credentials for connectivity.</p>
+
+            <h2>🔌 Hardware Requirements</h2>
+            <table>
+                <tr><th>Component</th><th>Details</th></tr>
+                <tr><td>ESP32</td><td>Dual-core processor, S3 variant recommended</td></tr>
+                <tr><td>I2S Microphone</td><td>INMP441 or compatible I2S MEMS microphone</td></tr>
+                <tr><td>Backend</td><td>MQTT broker or HTTP endpoint for audio processing</td></tr>
+            </table>
+
+            <h2>📦 Build & Flash</h2>
+            <p>Building and flashing the project follows standard ESP-IDF procedures. Make sure your ESP-IDF environment is properly set up before proceeding.</p>
+            <pre><code>. $HOME/esp/esp-idf/export.sh
+idf.py build
+idf.py -p /dev/ttyUSB0 flash monitor</code></pre>
+
+            <h2>📡 MQTT / HTTP Format</h2>
+            <p>The system supports both MQTT and HTTP protocols for audio data transmission, providing flexibility in backend integration approaches.</p>
+            <pre><code>MQTT:
+Topic: esp/audio/hijason
+Payload: raw PCM
+
+HTTP POST /api/audio
+Content-Type: audio/raw
+Body: [binary PCM16LE data]</code></pre>
+
+            <h2>📋 Example Use Case Flow</h2>
+            <div class="flow-diagram">
+                [Mic] --> [WakeNet detects "hijason"] --> [Start I2S Recording]<br>
+                     --> [Send Audio Buffer] --> [Cloud AI/NLP backend]<br>
+                     --> [Respond with Text/Speech/Action]
+            </div>
+
+            <div class="security-notes">
+                <h2>🔐 Security Notes</h2>
+                <p>Security considerations are paramount when dealing with voice data transmission. Always enable TLS encryption and implement proper authentication mechanisms for both MQTT and HTTP communications. Additionally, validate all buffer bounds to prevent potential overflow attacks and ensure data integrity throughout the pipeline.</p>
+            </div>
+
+            <div class="performance-section">
+                <h2>📈 Performance</h2>
+                <p>The system has been optimized for efficient resource utilization on ESP32 hardware. WakeNet9 typically consumes around 28% average CPU usage with peaks reaching 39% during active detection phases. Task priorities have been carefully tuned, and double-buffering techniques ensure stable audio capture without dropouts.</p>
+            </div>
+
+            <div class="future-section">
+                <h2>🔮 Future Enhancements</h2>
+                <p>Planned improvements include implementing on-device command recognition capabilities to reduce backend dependencies, integrating automatic TensorFlow Lite speech-to-text processing, adding voice feedback through text-to-speech synthesis, and implementing comprehensive power management optimizations for battery-powered applications.</p>
+            </div>
+
+            <h2>🤝 Contributing</h2>
+            <p>We welcome contributions from the community to improve wake word models, add support for additional communication protocols, or integrate new voice processing features. Please feel free to submit pull requests or open issues for discussion.</p>
+
+            <h2>📄 License</h2>
+            <p>This project is released under the MIT License, providing maximum flexibility for both personal and commercial use. See the LICENSE file for complete details.</p>
+
+            <div class="author-section">
+                <h2>👤 Author</h2>
+                <p><strong>Abdul Baseer</strong><br>
+                AI | Robotics(ROS2) | Embedded AI | ESP32 Developer | MERN | Spring Boot</p>
+            </div>
+        </div>
+    </div>
+
+</body> 
+</section>
+</html>

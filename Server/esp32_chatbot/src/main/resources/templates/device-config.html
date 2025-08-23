@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Device Configuration Dashboard</title>
+    <link rel="stylesheet" th:href="@{/react/assets/index-Dtn62Xmo.css}" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 70%, var(--accent-color) 100%);
+        color: var(--text-light);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-medium);
+        position: relative;
+        overflow: hidden;
+        min-height: 70px;
+    }
+
+    /* Subtle animated background pattern */
+    header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        opacity: 0.6;
+        animation: backgroundFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes backgroundFloat {
+        0%, 100% { transform: translateX(0) translateY(0); }
+        25% { transform: translateX(-10px) translateY(-5px); }
+        50% { transform: translateX(5px) translateY(-10px); }
+        75% { transform: translateX(-5px) translateY(5px); }
+    }
+
+    /* Logo section */
+    .logo {
+        position: relative;
+        z-index: 2;
+        flex-shrink: 0;
+    }
+
+    .logo h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: var(--transition-smooth);
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+    }
+
+    .logo h2:hover {
+        transform: translateY(-1px);
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Navigation container */
+    nav {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        flex-wrap: wrap;
+    }
+
+    /* Navigation links */
+    nav a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        transition: var(--transition-smooth);
+        position: relative;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    /* Hover and focus states */
+    nav a:hover,
+    nav a:focus {
+        transform: translateY(-1px);
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Active state */
+    nav a.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Focus styles for accessibility */
+    nav a:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 2px;
+    }
+
+    /* Mobile hamburger menu */
+    .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: var(--transition-smooth);
+        position: relative;
+        z-index: 3;
+    }
+
+    .mobile-menu-toggle:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        header {
+            padding: 1rem 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo h2 {
+            font-size: 1.3rem;
+        }
+
+        nav {
+            order: 3;
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav a {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .mobile-menu-toggle {
+            display: block;
+            order: 2;
+        }
+    }
+
+    @media (max-width: 640px) {
+        header {
+            padding: 0.75rem 1rem;
+        }
+
+        .logo h2 {
+            font-size: 1.2rem;
+        }
+
+        nav {
+            gap: 0.25rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+        }
+
+        nav a {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        header {
+            background: var(--primary-dark);
+        }
+        
+        nav a:hover,
+        nav a:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+        
+        header::before {
+            animation: none;
+        }
+        
+        nav a:hover {
+            transform: none;
+        } 
+    } 
+        .dashboard-container {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body> 
+     
+    <!-- Header Fragment Integration -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+
+    <header>
+        ESP32 Device Configuration Dashboard
+    </header>
+
+    <div class="dashboard-container">
+        <!-- React App Mount Point -->
+        <div id="root"></div>
+    </div>
+
+    <!-- React JS Bundle -->
+    <script type="module" th:src="@{/react/assets/index-CqCcB50Q.js}"></script>  
+     
+    <!-- Footer Fragment Integration -->
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>
