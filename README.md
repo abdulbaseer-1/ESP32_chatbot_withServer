@@ -61,17 +61,16 @@ This document details the architecture, configuration, communication protocols, 
 
 ```
 Server/
-+-- src/main/java/com/espchatbot/
-|   +-- controller/   # REST endpoints
-|   +-- service/      # AI integration services
-|   +-- config/       # Configuration and security
-|   \-- mqtt/         # MQTT client handler
-+-- src/main/resources/
-|   +-- application.yml # Configurations
-|   \-- logback.xml     # Logging
-+-- pom.xml             # Maven dependencies
-\-- README.md
-```
+├── src/main/java/com/espchatbot/
+│   ├── controller/      # REST controllers for audio/text endpoints
+│   ├── service/         # AI/NLP, STT, TTS integration
+│   ├── config/          # App + API key configuration
+│   └── mqtt/            # MQTT listener/publisher
+├── src/main/resources/
+│   ├── application.yml  # Server + AI settings
+│   └── logback.xml      # Logging
+├── pom.xml              # Maven dependencies
+
 
 ---
 
